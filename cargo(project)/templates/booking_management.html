@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="title">Booking Management</h2>
+
+<table class="booking-table" id="bookingTable">
+    <tr>
+        <th>ID</th>
+        <th>Flight</th>
+        <th>Weight</th>
+        <th>Status</th>
+        <th>Time Left</th>
+        <th>Action</th>
+    </tr>
+
+    {% for b in bookings %}
+    <tr class="row"
+        data-id="{{ b['id'] }}"
+        data-expires="{{ b['expires_at'] }}"
+        data-status="{{ b['status'] }}">
+
+        <td>{{ b['id'] }}</td>
+        <td>{{ b['flight_id'] }}</td>
+        <td>{{ b['weight'] }} kg</td>
+
+        <td class="statusCell status-{{ b['status']|lower }}">
+            {{ b['status'] }}
+        </td>
+
+        <td class="timerCell">
+            {% if b['status'] == 'HOLD' %}
+                <div class="timer-container">
+                    <svg class="progress-ring" width="40" height="40">
+                      <circle class="progress-ring__circle" stroke="blue" stroke-width="4"
+                              fill="transparent" r="16" cx="20" cy="20"/>
+                    </svg>
+                    <span class="timerText">{{ b['expires_at'] }}</span>
+                </div>
+            {% else %}
+                <span class="no-timer">—</span>
+            {% endif %}
+        </td>
+
+        <td class="actionCell">
+            {% if b['status'] == 'HOLD' %}
+            <form method="POST" action="/confirm_booking" class="action-form">
+                <input type="hidden" name="id" value="{{ b['id'] }}">
+                <button class="btn confirm">Confirm</button>
+            </form>
+            {% elif b['status'] == 'CONFIRMED' %}
+                <a href="/payment/{{ b['id'] }}" class="btn pay">Pay Now</a>
+            {% elif b['status'] == 'PAID' %}
+                <span class="paid-tag">Paid ✔</span>
+            {% else %}
+                <span>{{ b['status'] }}</span>
+            {% endif %}
+        </td>
+
+    </tr>
+    {% endfor %}
+</table>
+
+<!-- Warning Beep -->
+<audio id="warningSound">
+    <source src="https://www.soundjay.com/buttons/sounds/beep-05.mp3">
+</audio>
+
+<style>
+/* HEADER */
+.title {
+    margin-bottom: 20px;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+/* TABLE DESIGN */
+.booking-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+}
+
+.booking-table th {
+    background: #0a57d4;
+    color: white;
+    padding: 12px;
+}
+
+.booking-table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* STATUS COLORS */
+.status-hold { color: orange; font-weight: bold; }
+.status-confirmed { color: blue; font-weight: bold; }
+.status-cancelled { color: red; font-weight: bold; }
+.status-expired { color: red; font-weight: bold; }
+.status-paid { color: green; font-weight: bold; }
+
+/* BUTTONS */
+.btn {
+    padding: 7px 12px;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.btn.confirm { background: orange; }
+.btn.pay { background: green; }
+.paid-tag { color: green; font-weight: bold; }
+
+/* TIMER RING */
+.timer-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.progress-ring__circle {
+    transition: stroke-dashoffset 0.5s;
+}
+
+/* EXPIRE BLINK */
+.expired-blink {
+    animation: blink 1s infinite;
+}
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: .2; }
+    100% { opacity: 1; }
+}
+
+/* ROW HIGHLIGHT ON EXPIRY */
+.expired-row {
+    background: #ffdddd;
+    transition: background 1s ease-in-out;
+}
+</style>
+
+<script>
+function updateTimers() {
+    const rows = document.querySelectorAll("#bookingTable tr[data-id]");
+    const now = Math.floor(Date.now() / 1000);
+    let refresh = false;
+
+    rows.forEach(row => {
+        const expiry = parseInt(row.dataset.expires);
+        const status = row.dataset.status;
+
+        if (status !== "HOLD") return;
+
+        let remaining = expiry - now;
+        let timerText = row.querySelector(".timerText");
+        let circle = row.querySelector(".progress-ring__circle");
+        let audio = document.getElementById("warningSound");
+
+        if (!timerText || !circle) return;
+
+        if (remaining <= 0) {
+            timerText.innerHTML = "<span style='color:red;'>Expired</span>";
+            row.dataset.status = "EXPIRED";
+            row.classList.add("expired-row");
+            refresh = true;
+            return;
+        }
+
+        // Time text
+        let min = Math.floor(remaining / 60);
+        let sec = remaining % 60;
+        timerText.textContent = `${min}:${sec.toString().padStart(2,"0")}`;
+
+        // Progress ring animation
+        let percent = remaining / 120;
+        let circumference = 2 * Math.PI * 16;
+        let offset = circumference * (1 - percent);
+        circle.style.strokeDasharray = `${circumference} ${circumference}`;
+        circle.style.strokeDashoffset = offset;
+
+        // Warning color & sound
+        if (remaining <= 10) {
+            timerText.style.color = "red";
+            circle.style.stroke = "red";
+            audio.play();
+        } else if (remaining <= 30) {
+            timerText.style.color = "orange";
+            circle.style.stroke = "orange";
+        }
+    });
+
+    if (refresh) {
+        setTimeout(() => location.reload(), 1500);
+    }
+}
+
+setInterval(updateTimers, 1000);
+updateTimers();
+</script>
+
+{% endblock %}

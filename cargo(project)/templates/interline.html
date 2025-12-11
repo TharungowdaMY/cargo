@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Interline Route Planner</h2>
+
+  <form method="POST" id="interlineForm">
+    Origin: <input id="origin" name="origin"><br>
+    Destination: <input id="destination" name="destination"><br>
+    Date: <input type="date" name="date" required>
+<br>
+    <button type="submit" id="findInterlineBtn">Find Interline Routes</button>
+  </form>
+
+  <hr>
+
+  {% if routes %}
+    <h3>Available Interline Routes</h3>
+    {% for r in interline %}
+  <div class="route-box">
+     Route: {{ r[0]['origin'] }} → {{ r[0]['destination'] }} → {{ r[1]['destination'] }}<br>
+     Capacity: {{ min(r[0]['capacity'], r[1]['capacity']) }} kg
+  </div>
+
+  <!-- ⭐ HOLD BUTTON FOR INTERLINE ⭐ -->
+  <form method="POST" action="/book">
+      <input type="hidden" name="flight_id" value="{{ r[0]['id'] }}">
+      Weight (kg):
+      <input type="number" name="weight" required min="1"
+             max="{{ min(r[0]['capacity'], r[1]['capacity']) }}">
+      <button type="submit">Hold Route</button>
+  </form>
+{% endfor %}
+
+  {% else %}
+    <p>No interline routes.</p>
+  {% endif %}
+{% endblock %}

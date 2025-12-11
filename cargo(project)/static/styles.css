@@ -1,0 +1,172 @@
+/* ---------- GLOBAL STYLING ---------- */
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fa;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.container {
+    width: 90%;
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* ---------- NAVBAR ---------- */
+nav {
+    background: #004aad;
+    padding: 12px;
+    display: flex;
+    gap: 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+nav a:hover {
+    background: #006be6;
+}
+
+/* ---------- HEADERS ---------- */
+h1, h2, h3 {
+    color: #004aad;
+}
+
+/* ---------- FORM STYLING ---------- */
+form {
+    margin: 20px 0;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+input, select {
+    width: 95%;
+    padding: 10px;
+    margin: 8px 0 16px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+button {
+    background: #004aad;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #006be6;
+}
+
+/* ---------- CARD COMPONENT ---------- */
+.card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* ---------- TABLES ---------- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+table th {
+    background: #004aad;
+    color: white;
+}
+
+/* ---------- MESSAGES ---------- */
+.message {
+    padding: 10px;
+    background: #e4edff;
+    border-left: 4px solid #004aad;
+    margin-bottom: 10px;
+    border-radius: 6px;
+}
+
+.sender {
+    font-weight: bold;
+    color: #004aad;
+}
+
+/* ---------- ROUTE DISPLAY ---------- */
+.route-box {
+    padding: 12px;
+    background: #ffffff;
+    border-radius: 10px;
+    border-left: 4px solid #006be6;
+    margin-bottom: 15px;
+}
+
+.route-box p {
+    margin: 4px 0;
+}
+/* Suggestion Dropdown */
+.suggest-box {
+    background: white;
+    border: 1px solid #ccc;
+    max-height: 120px;
+    overflow-y: auto;
+    position: absolute;
+    z-index: 1000;
+    width: 95%;
+}
+
+.suggest-item {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.suggest-item:hover {
+    background: #004aad;
+    color: white;
+}
+
+/* Input Error Shake */
+.input-error {
+    border: 2px solid red !important;
+    animation: shake 0.2s;
+}
+
+@keyframes shake {
+    0% { transform: translateX(0px); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0px); }
+}
+
+/* Dark Mode */
+body.dark {
+    background: #222;
+    color: white;
+}
+
+body.dark nav {
+    background: #000;
+}
+
+body.dark .card {
+    background: #333;
+}

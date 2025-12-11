@@ -1,0 +1,4 @@
+airline,flight_no,origin,destination,date,capacity
+Emirates,EK215,DXB,LAX,2025-12-09,12000
+Emirates,EK7,DXB,LHR,2025-12-09,9000
+Qatar Airways,QR17,DOH,LHR,2025-12-09,8500

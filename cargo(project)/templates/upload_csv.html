@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Upload 24-Hour Flight CSV</h2>
+
+{% if message %}
+<div style="color: green; font-weight: bold;">
+    {{ message }}
+</div>
+{% endif %}
+
+<form method="POST" enctype="multipart/form-data">
+    <label>Select CSV File:</label><br>
+    <input type="file" name="csvfile" accept=".csv" required>
+    <br><br>
+    <button type="submit">Upload Flights</button>
+</form>
+
+<p><b>Note:</b> CSV must contain columns:<br>
+<code>airline, flight_no, origin, destination, date, capacity</code>
+</p>
+
+{% endblock %}
+>

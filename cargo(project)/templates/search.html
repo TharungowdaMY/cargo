@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Search Flights</h2>
+
+<form method="POST">
+    Origin: <input name="origin"><br>
+    Destination: <input name="destination"><br>
+    Date: <input type="date" name="date"><br>
+
+    Cargo Type:
+    <select name="cargo_type">
+        <option value="">Any</option>
+        <option value="General">General</option>
+        <option value="Dangerous Goods">Dangerous Goods</option>
+        <option value="Pharma">Pharma</option>
+        <option value="Live Animals">Live Animals</option>
+        <option value="Perishables">Perishables</option>
+        <option value="High Value">High Value</option>
+    </select><br><br>
+
+    <button type="submit">Search</button>
+</form>
+
+<hr>
+
+<h3>Direct Flights</h3>
+{% if results %}
+    {% for f in results %}
+        <div class="card">
+            <b>{{ f['flight_no'] }}</b> —
+            {{ f['origin'] }} → {{ f['destination'] }} <br>
+            Capacity: {{ f['capacity'] }} kg <br>
+            Cargo Type: <b>{{ f['cargo_type'] }}</b>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No direct flights found.</p>
+{% endif %}
+
+<hr>
+
+<h3>Interline Options</h3>
+{% if interline %}
+    {% for r in interline %}
+        <div class="card">
+            Route: {{ r.legs[0]['origin'] }} → {{ r.legs[0]['destination'] }} → {{ r.legs[1]['destination'] }} <br>
+            Combined Capacity: {{ r.capacity }} kg <br>
+            Cargo Type: <b>{{ r.cargo_type }}</b>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No interline routes available.</p>
+{% endif %}
+{% endblock %}

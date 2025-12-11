@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Workspace / Messages</h2>
+
+  <form method="POST" id="workspaceForm">
+    Your name: <input name="sender" required><br>
+    Message: <input name="text" required><br>
+    <button type="submit">Send</button>
+  </form>
+
+  <hr>
+
+  <div id="messageBox">
+    {% for m in messages %}
+      <div class="message"><span class="sender">{{ m['sender'] }}</span>: {{ m['text'] }}</div>
+    {% endfor %}
+  </div>
+{% endblock %}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cargo Network Portal</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <nav>
+    <a href="/">Home</a>
+    {% if session.get('role') == 'airline' %}
+    <a href="/airline_optimizer">Optimizer</a>
+{% endif %}
+
+    {% if session.get('user_id') %}
+      {% if session.get('role') == 'airline' %}
+        <a href="/upload">Upload Capacity</a>
+        <a href="/upload_csv">Upload CSV Flights</a>
+
+        <a href="/big_feed">Big Airline Feed</a>
+      {% elif session.get('role') == 'forwarder' %}
+        <a href="/forwarder_search">Forwarder Portal</a>
+      {% endif %}
+      <a href="/search">Search</a>
+      <a href="/interline">Interline Routing</a>
+      <a href="/bookings">Booking Management</a>
+      <a href="/workspace">Workspace</a>
+      <a href="/logout">Logout ({{ session.get('role') }})</a>
+    {% else %}
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+      <a href="/search">Search</a>
+      <a href="/interline">Interline Routing</a>
+    {% endif %}
+    <button id="darkModeBtn" style="margin-left:auto;">Dark Mode</button>
+  </nav>
+
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

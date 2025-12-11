@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Welcome to Cargo Network Portal</h1>
+  <p>Unified cargo capacity discovery, interline routing & booking.</p>
+
+  {% if not session.get('user_id') %}
+    <div class="card">
+      <h3>Get started</h3>
+      <p><a href="/register">Register</a> or <a href="/login">Login</a> as Airline or Forwarder.</p>
+    </div>
+  {% endif %}
+{% endblock %}

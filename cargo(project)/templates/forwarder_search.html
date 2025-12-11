@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Forwarder Search</h2>
+
+<form method="POST">
+    Origin: <input name="origin"><br>
+    Destination: <input name="destination"><br>
+    Date: <input type="date" name="date" required><br>
+    <button type="submit">Search</button>
+</form>
+
+<hr>
+
+<h3>Direct Flights</h3>
+{% if results %}
+    {% for f in results %}
+        <div class="card">
+            <b>{{ f['flight_no'] }}</b> — {{ f['origin'] }} → {{ f['destination'] }}
+            | Capacity: {{ f['capacity'] }} kg
+        </div>
+
+        <!-- ⭐ PLACE HOLD BUTTON (CORRECT POSITION) ⭐ -->
+        <form method="POST" action="/book">
+            <input type="hidden" name="flight_id" value="{{ f['id'] }}">
+            Weight (kg):
+            <input type="number" name="weight" required min="1" max="{{ f['capacity'] }}">
+            <button type="submit">Place Hold</button>
+        </form>
+
+    {% endfor %}
+{% else %}
+    <p>No direct flights.</p>
+{% endif %}
+
+<hr>
+
+<h3>Interline Options</h3>
+{% if interline %}
+    {% for r in interline %}
+        <div class="route-box">
+            Route: {{ r.legs[0]['origin'] }} → {{ r.legs[0]['destination'] }} → {{ r.legs[1]['destination'] }} <br>
+            Capacity: {{ r.capacity }} kg <br>
+            Cargo Type: {{ r.cargo_type }}
+        </div>
+
+        <!-- ⭐ HOLD FOR INTERLINE STRICTLY UNDER LOOP ⭐ -->
+        <form method="POST" action="/book">
+            <input type="hidden" name="flight_id" value="{{ r.legs[0]['id'] }}">
+            Weight (kg):
+            <input type="number" name="weight" required min="1" max="{{ r.capacity }}">
+            <button type="submit">Hold Interline</button>
+        </form>
+
+    {% endfor %}
+{% else %}
+    <p>No interline routes found.</p>
+{% endif %}
+
+{% endblock %}

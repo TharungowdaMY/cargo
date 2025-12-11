@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Upload Flight</h2>
+
+<form method="POST">
+    Airline: <input name="airline"><br>
+    Flight No: <input name="flight_no"><br>
+    Origin: <input name="origin"><br>
+    Destination: <input name="destination"><br>
+    Date: <input type="date" name="date"><br>
+    Capacity: <input type="number" name="capacity"><br>
+
+    Cargo Type:
+    <select name="cargo_type">
+        <option>General</option>
+        <option>Pharma</option>
+        <option>Dangerous Goods</option>
+        <option>High Value</option>
+        <option>Perishables</option>
+        <option>Animals</option>
+    </select><br><br>
+
+    <button type="submit">Upload</button>
+</form>
+
+{% if message %}
+<p>{{ message }}</p>
+{% endif %}
+
+{% endblock %}
